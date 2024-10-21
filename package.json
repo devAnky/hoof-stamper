@@ -36,6 +36,7 @@
     "ionicons": "^7.0.0",
     "ngx-photo-editor": "^0.4.4",
     "rxjs": "~7.8.0",
+    "ts-luxon": "^5.0.7-beta.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
   },

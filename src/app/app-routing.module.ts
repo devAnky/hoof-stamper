@@ -8,8 +8,12 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: '/home',
     pathMatch: 'full'
+  },
+  {
+    path: 'canvas/:position',
+    loadChildren: () => import('./canvas/canvas.module').then( m => m.CanvasPageModule)
   },
 ];
 

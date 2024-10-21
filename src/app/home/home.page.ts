@@ -1,25 +1,23 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {ImageService, UserImage} from "../services/image.service";
 import {ActionSheetController} from "@ionic/angular";
 import {NgxCroppedEvent, NgxPhotoEditorService} from "ngx-photo-editor";
 import {Subscription} from "rxjs";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-home',
     templateUrl: 'home.page.html',
     styleUrls: ['home.page.scss'],
 })
-export class HomePage implements OnInit, OnDestroy {
+export class HomePage implements OnDestroy {
 
     private readonly subs = new Subscription();
 
     constructor(protected imageService: ImageService,
                 private actionSheetController: ActionSheetController,
-                private imageCropper: NgxPhotoEditorService) {
-    }
-
-    async ngOnInit(): Promise<void> {
-        await this.imageService.loadSaved();
+                private imageCropper: NgxPhotoEditorService,
+                private router: Router) {
     }
 
     ngOnDestroy(): void {
@@ -41,29 +39,41 @@ export class HomePage implements OnInit, OnDestroy {
                     this.cropImage(photo, position);
                 }
             },
-                {
-                    text: 'Delete',
-                    role: 'destructive',
-                    icon: 'trash',
-                    handler: (): void => {
-                        this.imageService.deleteImage(photo, position);
-                    }
-                }, {
-                    text: 'Cancel',
-                    icon: 'close',
-                    role: 'cancel',
-                    handler: (): void => {
-                        // Nothing to do, action sheet is automatically closed
-                    }
+            {
+                text: 'Add sticker',
+                role: 'button',
+                icon: 'pricetag',
+                handler: (): void => {
+                    this.openAsCanvas(position);
+                }
+            },
+            {
+                text: 'Delete',
+                role: 'destructive',
+                icon: 'trash',
+                handler: (): void => {
+                    this.imageService.deleteImage(photo, position);
+                }
+            }, {
+                text: 'Cancel',
+                icon: 'close',
+                role: 'cancel',
+                handler: (): void => {
+                    // Nothing to do, action sheet is automatically closed
+                }
                 }]
         });
         await actionSheet.present();
     }
 
-    private cropImage(photo: UserImage, position: number): void {
-        this.imageCropper.open(photo.webviewPath, {
+    private cropImage(image: UserImage, position: number): void {
+        this.imageCropper.open(image.webviewPath, {
             aspectRatio: 4 / 3,
             autoCropArea: 1
-        }).subscribe((event: NgxCroppedEvent) => this.imageService.replacePhoto(photo, position, event.base64!));
+        }).subscribe((event: NgxCroppedEvent) => this.imageService.replacePhoto(image, position, event.base64!));
+    }
+
+    private openAsCanvas(position: number): void {
+        this.router.navigateByUrl('/canvas/' + position);
     }
 }

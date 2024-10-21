@@ -1,0 +1,24 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-title>canvas</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <div id="canvas-wrapper">
+        <canvas id="image-canvas">
+        </canvas>
+    </div>
+</ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <ion-button (click)="onFootClick(Hoof.LEFT_FRONT)">
+            <ion-icon name="return-up-back-outline"></ion-icon>
+            LF
+        </ion-button>
+        <ion-button (click)="onFootClick(Hoof.RIGHT_FRONT)">
+            <ion-icon name="return-up-forward-outline"></ion-icon>
+            RF
+        </ion-button>
+    </ion-toolbar>
+</ion-footer>
