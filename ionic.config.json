@@ -1,0 +1,7 @@
+{
+  "name": "hoof-stamp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
