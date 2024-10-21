@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {PhotoService, UserPhoto} from "../services/photo.service";
+import {ImageService, UserImage} from "../services/image.service";
 import {ActionSheetController} from "@ionic/angular";
 import {NgxCroppedEvent, NgxPhotoEditorService} from "ngx-photo-editor";
 import {Subscription} from "rxjs";
@@ -13,13 +13,13 @@ export class HomePage implements OnInit, OnDestroy {
 
     private readonly subs = new Subscription();
 
-    constructor(protected photoService: PhotoService,
+    constructor(protected imageService: ImageService,
                 private actionSheetController: ActionSheetController,
-                private photoEditor: NgxPhotoEditorService) {
+                private imageCropper: NgxPhotoEditorService) {
     }
 
     async ngOnInit(): Promise<void> {
-        await this.photoService.loadSaved();
+        await this.imageService.loadSaved();
     }
 
     ngOnDestroy(): void {
@@ -27,10 +27,10 @@ export class HomePage implements OnInit, OnDestroy {
     }
 
     protected onCameraClick(): void {
-        this.photoService.addNewToGallery();
+        this.imageService.addNewToGallery();
     }
 
-    protected async onImageClick(photo: UserPhoto, position: number): Promise<void> {
+    protected async onImageClick(photo: UserImage, position: number): Promise<void> {
         const actionSheet = await this.actionSheetController.create({
             header: 'Photos',
             buttons: [{
@@ -46,7 +46,7 @@ export class HomePage implements OnInit, OnDestroy {
                     role: 'destructive',
                     icon: 'trash',
                     handler: (): void => {
-                        this.photoService.deletePicture(photo, position);
+                        this.imageService.deleteImage(photo, position);
                     }
                 }, {
                     text: 'Cancel',
@@ -60,10 +60,10 @@ export class HomePage implements OnInit, OnDestroy {
         await actionSheet.present();
     }
 
-    private cropImage(photo: UserPhoto, position: number): void {
-        this.photoEditor.open(photo.webviewPath, {
+    private cropImage(photo: UserImage, position: number): void {
+        this.imageCropper.open(photo.webviewPath, {
             aspectRatio: 4 / 3,
             autoCropArea: 1
-        }).subscribe((event: NgxCroppedEvent) => this.photoService.replacePhoto(photo, position, event.base64!));
+        }).subscribe((event: NgxCroppedEvent) => this.imageService.replacePhoto(photo, position, event.base64!));
     }
 }
